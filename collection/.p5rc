@@ -1,0 +1,11 @@
+{
+  "name": "collection",
+  "projects": [
+    "rda",
+    "rda-shader",
+    "flying",
+    "plug",
+    "melting-typo",
+    "clouds"
+  ]
+}
