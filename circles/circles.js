@@ -2,7 +2,8 @@ const canvasSketch = require('canvas-sketch');
 const { renderPolylines } = require('canvas-sketch-util/penplot');
 const { clipPolylinesToBox } = require('canvas-sketch-util/geometry');
 
-import { Arc, Circle, getRandomFloat, getRandomInt, dist } from './_utils';
+import { getRandomFloat, getRandomInt, dist} from './_utils';
+import {Circle} from './_utils/arc';
 
 const settings = {
   name: 'circles',
@@ -42,45 +43,41 @@ const prepareGradient = function(reso, width, height) {
   return {xpos, xSumOfWeights, ypos, ySumOfWeights};
 }
 
-const {xpos, xSumOfWeights, ypos, ySumOfWeights} = prepareGradient(500, 21, 29.7);
-
-
-function createCircles(amount) {
-  let circles = [];
-  for(let i = 0; i < amount; i++) {
-    const newCircle = new Circle(weightedRandom(xpos, xSumOfWeights).value, weightedRandom(ypos, ySumOfWeights).value, getRandomFloat(0.1, 1));
-    if(i === 0) {
-      circles.push(newCircle);
-    }
-    for(let j = 0; j < circles.length; i++) {
-      const {xpos, ypos, r} = circles[j];
-      // if(dist({x: xpos, y: ypos}, {x:newCircle.x, y: newCircle.y}) >= r + newCircle.r) {
-      //   circles.push(newCircle);
-      // } 
-    }
-  }
-  return circles;
-}
-
 
 const sketch = ({ width, height }) => {
   // List of polylines for our pen plot
   let lines = [];
-  const count = 100;
+  const {xpos, xSumOfWeights, ypos, ySumOfWeights} = prepareGradient(500, 21, 29.7);
+  const max = 4;
+  let count = 0;
+  const circles = [];
+  while (count < max){
+    let newPos = {
+      x: getRandomInt(0, width),//weightedRandom(xpos, xSumOfWeights).value,
+      y: getRandomInt(0, height)//weightedRandom(ypos, ySumOfWeights).value
+    }
+    let valid = true;
+    for(let c of circles) {
+      if(dist(newPos, c.pos) < c.r) {
+        valid = false;
+        break;
+      };
+    }     
+    if (valid){
+      circles.push(new Circle(newPos.x,newPos.y , 0, count));
+      circles[count].grow(width, height, 0.1, circles);
+      count++;
+    } 
+
+  }
 
   // Draw some circles expanding outwards
   for(let i = 0; i < count; i++) {
-    const circle = new Circle(weightedRandom(xpos, xSumOfWeights).value, weightedRandom(ypos, ySumOfWeights).value, getRandomFloat(0.1, 1));
-    lines.push(circle.points)
+    lines.push(circles[i].points)
   }
 
-  // const circles = createCircles(100);
-  // for(let j = 0; j < circles.length; i++) {
-  //   lines.push(circles[i].points);
-  // }
-
   // Clip all the lines to a margin
-  const margin = 1.0;
+  const margin = 0.0;
   const box = [ margin, margin, width - margin, height - margin ];
   lines = clipPolylinesToBox(lines, box);
 

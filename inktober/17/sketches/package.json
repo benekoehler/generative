@@ -1,0 +1,16 @@
+{
+  "name": "sketches",
+  "version": "1.0.0",
+  "description": "",
+  "main": "2019.10.17-17.44.26.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas-sketch": "^0.7.0",
+    "three": "^0.109.0"
+  }
+}
