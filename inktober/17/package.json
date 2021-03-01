@@ -13,6 +13,6 @@
     "canvas-sketch": "^0.7.0",
     "glsl-hsl2rgb": "^1.1.0",
     "glslify": "^7.0.0",
-    "three": "^0.109.0"
+    "three": "^0.125.0"
   }
 }
